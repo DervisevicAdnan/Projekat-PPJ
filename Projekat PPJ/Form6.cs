@@ -63,6 +63,7 @@ namespace Projekat_PPJ
                 MySqlDataReader reader = cmd.ExecuteReader();
                 reader.Read();
                 textBoxTotal.Text = reader[0].ToString();
+                ModificirajGridView(dataGridView2);
             }
             catch (Exception ex)
             {
@@ -73,6 +74,8 @@ namespace Projekat_PPJ
         private void Form6_Load(object sender, EventArgs e)
         {
             prikaziNarudzbe();
+            ModificirajGridView(dataGridView1);
+            labelKorisnickoIme.Text = Form1.ImeKorisnika;
         }
 
         private void Form6_FormClosed(object sender, FormClosedEventArgs e)
@@ -85,6 +88,63 @@ namespace Projekat_PPJ
             Form5 fr5 = new Form5();
             this.Hide();
             fr5.Show();
+        }
+        int narudzbenicaID;
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+                {
+                    narudzbenicaID = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
+                }
+                textBoxId.Text = narudzbenicaID.ToString();
+                buttonPrikaz.PerformClick();
+            }
+            catch
+            {
+                MessageBox.Show("Trebate odabrati polje u tabeli!");
+            }
+            
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void loginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form1 fr1 = new Form1();
+            this.Hide();
+            fr1.Show();
+        }
+        private void ModificirajGridView(DataGridView dgv)
+        {
+            // Funckija postavlja parne redove datagridview kontrole u sivu, 
+            // a neparne u bijelu boju
+            for (int i = 0; i < dgv.Rows.Count; i++)
+            {
+                if (dgv.Rows.IndexOf(dgv.Rows[i]) % 2 == 0)
+                    dgv.Rows[i].DefaultCellStyle.BackColor = Color.Gainsboro;
+                else
+                    dgv.Rows[i].DefaultCellStyle.BackColor = Color.WhiteSmoke;
+            }
+        }
+        public Point LokacijaKursora;
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Point mousePose = Control.MousePosition;
+                mousePose.Offset(LokacijaKursora.X, LokacijaKursora.Y);
+                Location = mousePose;
+            }
+        }
+
+        private void Form5_MouseDown(object sender, MouseEventArgs e)
+        {
+            LokacijaKursora = new Point(-e.X, -e.Y);
         }
     }
 }

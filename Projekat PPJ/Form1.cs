@@ -20,7 +20,7 @@ namespace Projekat_PPJ
         public static String kupacID;
         public static String konekcioniString = "Server=localhost; Port=3306; " +
             "Database=projektni_ppj; Uid=root; Pwd=12345678";
-
+        public static String ImeKorisnika = "";
         private void buttonPrijava_Click(object sender, EventArgs e)
         {
             errorProvider1.Clear();
@@ -56,7 +56,7 @@ namespace Projekat_PPJ
                     String passwd = reader[0].ToString();
                     String imePrez = reader[1].ToString();
                     kupacID = reader[2].ToString();
-
+                    ImeKorisnika = textBoxKorisnickoIme.Text;
                     if (sifra == passwd)
                     {
                         MessageBox.Show("Uspješno ste logovani " + imePrez);
@@ -90,5 +90,14 @@ namespace Projekat_PPJ
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+      
+
+       
     }
 }

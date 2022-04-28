@@ -36,6 +36,7 @@ namespace Projekat_PPJ
             dataAdapter.Fill(tabela);
             dataGridView1.DataSource = tabela;
             dataAdapter.Dispose();
+            ModificirajGridView(dataGridView1);
         }
 
         private void Form4_FormClosed(object sender, FormClosedEventArgs e)
@@ -104,5 +105,65 @@ namespace Projekat_PPJ
             this.Hide();
             fr3.Show();
         }
+        int idNarudzbe;
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+
+                if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+                {
+                    idNarudzbe = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
+                }
+
+                textBoxId.Text = idNarudzbe.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message+"Trebate odabrati polje u tabeli!");
+            }
+        }
+
+        private void ModificirajGridView(DataGridView dgv)
+        {
+            // Funckija postavlja parne redove datagridview kontrole u sivu, 
+            // a neparne u bijelu boju
+            for (int i = 0; i < dgv.Rows.Count; i++)
+            {
+                if (dgv.Rows.IndexOf(dgv.Rows[i]) % 2 == 0)
+                    dgv.Rows[i].DefaultCellStyle.BackColor = Color.Gainsboro;
+                else
+                    dgv.Rows[i].DefaultCellStyle.BackColor = Color.WhiteSmoke;
+            }
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void loginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form1 fr1 = new Form1();
+            this.Hide();
+            fr1.Show();
+        }
+
+        public Point LokacijaKursora;
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Point mousePose = Control.MousePosition;
+                mousePose.Offset(LokacijaKursora.X, LokacijaKursora.Y);
+                Location = mousePose;
+            }
+        }
+
+        private void Form5_MouseDown(object sender, MouseEventArgs e)
+        {
+            LokacijaKursora = new Point(-e.X, -e.Y);
+        }
+
     }
 }

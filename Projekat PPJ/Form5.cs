@@ -28,7 +28,8 @@ namespace Projekat_PPJ
 
         private void Form5_Load(object sender, EventArgs e)
         {
-
+            labelKorisnickoIme.Text = Form1.ImeKorisnika;
+            
         }
 
         private void buttonKreirajNarudzbu_Click(object sender, EventArgs e)
@@ -73,6 +74,7 @@ namespace Projekat_PPJ
                 dataGridView1.DataSource = tabela;
                 dataAdapter.Dispose();
                 konekcija.Close();
+                ModificirajGridView(dataGridView1);
             }
             catch (Exception ex)
             {
@@ -109,6 +111,7 @@ namespace Projekat_PPJ
                 }
                 reader.Close();
                 konekcija.Close();
+                ModificirajGridView(dataGridView2);
             }
             catch (Exception ex)
             {
@@ -162,9 +165,9 @@ namespace Projekat_PPJ
                     }
                     else
                     {
-                        stanje += Convert.ToInt32(reader["kolicina"]) - Convert.ToInt32(textBoxKolicina.Text);
+                        stanje -= Convert.ToInt32(textBoxKolicina.Text);
                         query = "UPDATE stavka_narudzbenice SET" +
-                        " kolicina='" + textBoxKolicina.Text + "' WHERE" +
+                        " kolicina=kolicina+'" + textBoxKolicina.Text + "' WHERE" +
                         " narudzbenica_id='" + narID + "' AND artikal_id='" + textBoxId.Text + "';";
                     }
                     reader.Close();
@@ -240,6 +243,94 @@ namespace Projekat_PPJ
 
         private void prikazNarudžbiIStavkiToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Form6 fr6 = new Form6();
+            this.Hide();
+            fr6.Show();
+        }
+        int artikalId;
+        
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+                {
+                    artikalId = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
+                }
+
+                textBoxId.Text = artikalId.ToString();
+                textBoxKolicina.Clear();
+            }
+            catch
+            {
+                MessageBox.Show("Trebate odabrati polje u tabeli!");
+            }
+        }
+        int stavkaID;
+        private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
+                {
+                    stavkaID = int.Parse(dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString());
+                    
+                }
+                textBoxId.Text = stavkaID.ToString();
+                textBoxKolicina.Clear();
+               
+            }
+            catch
+            {
+                MessageBox.Show("Trebate odabrati polje u tabeli!");
+            }
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void loginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form1 fr1 = new Form1();
+            this.Hide();
+            fr1.Show();
+        }
+        private void ModificirajGridView(DataGridView dgv)
+        {
+            // Funckija postavlja parne redove datagridview kontrole u sivu, 
+            // a neparne u bijelu boju
+            for (int i = 0; i < dgv.Rows.Count; i++)
+            {
+                if (dgv.Rows.IndexOf(dgv.Rows[i]) % 2 == 0)
+                    dgv.Rows[i].DefaultCellStyle.BackColor = Color.Gainsboro;
+                else
+                    dgv.Rows[i].DefaultCellStyle.BackColor = Color.WhiteSmoke;
+            }
+        }
+
+
+        public Point LokacijaKursora;
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Point mousePose = Control.MousePosition;
+                mousePose.Offset(LokacijaKursora.X, LokacijaKursora.Y);
+                Location = mousePose;
+            }
+        }
+
+        private void Form5_MouseDown(object sender, MouseEventArgs e)
+        {
+            LokacijaKursora = new Point(-e.X, -e.Y);
+        }
+
+        private void buttonZavrsi_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Kupovina uspješno obavljena\r\nUgodan ostatak dana! :) ");
             Form6 fr6 = new Form6();
             this.Hide();
             fr6.Show();
